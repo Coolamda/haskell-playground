@@ -17,20 +17,33 @@ testHash = getHash "test"
 characters :: String
 characters = ['1'..'9'] ++ ['A'..'B'] ++ ['a'..'z']
 
--- Generiere eine Liste mit Passwörtern und den dazugehörigen Hashes
-allHashes :: [(Password, HexHash)]
-allHashes = map (\x -> (x, getHash x)) passwords
-
--- Suche nach einem Hash in allHashes
-searchHash :: HexHash -> Maybe (Password, HexHash)
-searchHash hash = find ((== hash) . snd) allHashes
+-- Hashe alles Passwörter
+allPasswordsHashed :: [(Password, HexHash)]
+allPasswordsHashed = allHashes passwords
 
 -- Generiere alle möglichen Kombination aus characters
 passwords :: [Password]
-passwords = concat $ combinations 1
-    where combinations n
-            | n <= length characters = replicateM n characters : combinations (n + 1)
-            | otherwise = []
+passwords = concat $ combinationsFromTo 1 (length characters) characters
+
+-- Suche Hash für Passwort in allPasswordsHashed
+searchPasswordHash :: HexHash -> Maybe (Password, HexHash)
+searchPasswordHash hash = searchHash hash allPasswordsHashed
+
+
+-- UTILS AND HELPERS
+-- Generiere eine Liste mit Strings und den dazugehörigen Hashes
+allHashes :: [String] -> [(String, HexHash)]
+allHashes = map (\x -> (x, getHash x))
+
+-- Suche nach einem Hash
+searchHash :: HexHash -> [(String, HexHash)] -> Maybe (String, HexHash)
+searchHash hash = find ((== hash) . snd)
+
+-- Generiere alle möglichen Kombination mit einer bestimmt Reichweite an Längen
+combinationsFromTo :: Int -> Int -> [a] -> [[[a]]]
+combinationsFromTo n m xs
+    | n <= m = replicateM n xs : combinationsFromTo (n + 1) m xs
+    | otherwise = []
 
 -- Generiere einen Hex Hash aus einem String
 getHash :: String -> HexHash
