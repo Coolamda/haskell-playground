@@ -1,5 +1,6 @@
 module Bruteforce where
 
+import System.Environment
 import Data.Word
 import Data.Char (ord)
 import Data.List (find)
@@ -10,6 +11,9 @@ import Crypto.Hash.SHA256 (hash)
 
 type HexHash = String
 type Password = String
+
+main = do [hash] <- getArgs
+          print . searchPasswordHash $ hash
 
 testHash = getHash "test"
 
