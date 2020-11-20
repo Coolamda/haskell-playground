@@ -39,10 +39,13 @@ main = do [pathToDict] <- getArgs
               -- result = find isPassword passwordsTxt
           print result
 
+-- Simuliert einen gesuchen Hash
 searchedHash = getHash "xzy"
 
+-- Überprüfe ob das eingegebene Passwort der gesuchte Hash ist
 isPassword :: Password -> Bool
 isPassword password = getHash password == searchedHash
+
 
 -- UTILS AND HELPERS
 -- Generiere eine Liste mit Strings und den dazugehörigen Hashes
