@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f47ff6f210da2ec4e232f95363bde09c7bfcacd4b5b39fbcf50f3b2a894564cf
+-- hash: c2fce02885d20498f852eb8c25a86c0b8d15113be8637c5a400972dbd089ffd4
 
 name:           haskell-playground
 version:        0.1.0.0
@@ -42,10 +42,11 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
     , cryptohash-sha256
     , directory
     , random
-    , bytestring
+    , split
   default-language: Haskell2010
 
 executable haskell-playground-exe
@@ -58,10 +59,12 @@ executable haskell-playground-exe
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
     , cryptohash-sha256
     , directory
     , haskell-playground
     , random
+    , split
   default-language: Haskell2010
 
 test-suite haskell-playground-test
@@ -75,8 +78,10 @@ test-suite haskell-playground-test
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
     , cryptohash-sha256
     , directory
     , haskell-playground
     , random
+    , split
   default-language: Haskell2010

@@ -12,16 +12,12 @@ import Crypto.Hash.SHA256 (hash)
 type HexHash = String
 type Password = String
 
-main = do [hash] <- getArgs
-          print . searchPasswordHash $ hash
-
-testHash = getHash "test"
-
+-- ERSTE AUFGABE
 -- List aller möglichen Zeichen
 characters :: String
-characters = ['1'..'9'] ++ ['A'..'B'] ++ ['a'..'z']
+characters = ['1'..'9'] ++ ['A'..'Z'] ++ ['a'..'z']
 
--- Hashe alles Passwörter
+-- Hashe alle Passwörter
 allPasswordsHashed :: [(Password, HexHash)]
 allPasswordsHashed = allHashes passwords
 
@@ -33,6 +29,20 @@ passwords = concat $ combinationsFromTo 1 (length characters) characters
 searchPasswordHash :: HexHash -> Maybe (Password, HexHash)
 searchPasswordHash hash = searchHash hash allPasswordsHashed
 
+
+-- ZWEITE AUFGABE
+main = do [pathToDict] <- getArgs
+          fileContent <- readFile pathToDict
+          let passwordsTxt = lines fileContent 
+              hashedPasswordTxt = allHashes passwordsTxt
+              result = map (searchPasswordHash . snd) hashedPasswordTxt
+              -- result = find isPassword passwordsTxt
+          print result
+
+searchedHash = getHash "xzy"
+
+isPassword :: Password -> Bool
+isPassword password = getHash password == searchedHash
 
 -- UTILS AND HELPERS
 -- Generiere eine Liste mit Strings und den dazugehörigen Hashes

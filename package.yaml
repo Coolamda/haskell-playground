@@ -25,6 +25,10 @@ dependencies:
 - aeson
 - random
 - cryptohash-sha256
+- directory
+- random
+- bytestring
+- split
 
 library:
   source-dirs: src
