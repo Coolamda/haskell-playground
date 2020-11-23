@@ -34,13 +34,13 @@ searchPasswordHash hash = searchHash hash allPasswordsHashed
 main = do [pathToDict] <- getArgs
           fileContent <- readFile pathToDict
           let passwordsTxt = lines fileContent 
-              hashedPasswordTxt = allHashes passwordsTxt
-              result = map (searchPasswordHash . snd) hashedPasswordTxt
-              -- result = find isPassword passwordsTxt
+              -- hashedPasswordTxt = allHashes passwordsTxt
+              -- result = map (searchPasswordHash . snd) hashedPasswordTxt
+              result = find isPassword passwordsTxt
           print result
 
 -- Simuliert einen gesuchen Hash
-searchedHash = getHash "xzy"
+searchedHash = getHash "xyz"
 
 -- Überprüfe ob das eingegebene Passwort der gesuchte Hash ist
 isPassword :: Password -> Bool
