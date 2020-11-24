@@ -9,10 +9,30 @@ import Control.Monad (replicateM)
 import Text.Printf (printf)
 import Crypto.Hash.SHA256 (hash)
 
+
+-- TYPES
 type HexHash = String
 type Password = String
+type Args = [String]
+
+
+-- MAIN
+main = do command : args <- getArgs
+          let (Just action) = lookup command dispatch
+          action args
+
+-- Liste der ausführbaren commands
+dispatch :: [(String, Args -> IO ())]
+dispatch = [ ("bruteForce", bruteForceCommand)
+           , ("all", allCommand)
+           , ("one", oneComnand)
+           ]
+
 
 -- ERSTE AUFGABE
+bruteForceCommand :: Args -> IO ()
+bruteForceCommand [hash] = print . searchPasswordHash $ hash
+
 -- List aller möglichen Zeichen
 characters :: String
 characters = ['1'..'9'] ++ ['A'..'Z'] ++ ['a'..'z']
@@ -29,25 +49,6 @@ passwords = concat $ combinationsFromTo 1 (length characters) characters
 searchPasswordHash :: HexHash -> Maybe (Password, HexHash)
 searchPasswordHash hash = searchHash hash allPasswordsHashed
 
-
--- ZWEITE AUFGABE
-main = do [pathToDict] <- getArgs
-          fileContent <- readFile pathToDict
-          let passwordsTxt = lines fileContent 
-              -- hashedPasswordTxt = allHashes passwordsTxt
-              -- result = map (searchPasswordHash . snd) hashedPasswordTxt
-              result = find isPassword passwordsTxt
-          print result
-
--- Simuliert einen gesuchen Hash
-searchedHash = getHash "xyz"
-
--- Überprüfe ob das eingegebene Passwort der gesuchte Hash ist
-isPassword :: Password -> Bool
-isPassword password = getHash password == searchedHash
-
-
--- UTILS AND HELPERS
 -- Generiere eine Liste mit Strings und den dazugehörigen Hashes
 allHashes :: [String] -> [(String, HexHash)]
 allHashes = map (\x -> (x, getHash x))
@@ -73,3 +74,25 @@ toHex = concatMap (printf "%02x")
 -- Konvertiere einen String in Word8 (Wird zum generieren von Hashes benötigt)
 toListOfWord8 :: String -> [Word8]
 toListOfWord8 = map (fromIntegral.ord)
+
+
+-- ZWEITE AUFGABE
+allCommand :: Args -> IO ()
+allCommand [path] = do fileContent <- readFile path
+                       let passwordsTxt = lines fileContent 
+                           hashedPasswordTxt = allHashes passwordsTxt
+                           result = map (searchPasswordHash . snd) hashedPasswordTxt
+                       print result
+
+oneComnand :: Args -> IO ()
+oneComnand [path] = do fileContent <- readFile path
+                       let passwordsTxt = lines fileContent 
+                           result = find isPassword passwordsTxt
+                       print result
+
+-- Simuliert einen gesuchen Hash
+searchedHash = getHash "yes"
+
+-- Überprüfe ob das eingegebene Passwort der gesuchte Hash ist
+isPassword :: Password -> Bool
+isPassword password = getHash password == searchedHash
