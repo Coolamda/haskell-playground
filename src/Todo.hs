@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 module Todo where
 
@@ -77,11 +76,11 @@ removeTodo :: TodoList -> Int -> TodoList
 removeTodo todoList index = delete (todoList !! index) todoList
 
 editTodo :: TodoList -> Int -> Todo -> TodoList
-editTodo todoList index todo = replaceAtN todoList index todo
+editTodo = replaceAtN
 
 bumpTodo :: TodoList -> Int -> TodoList
 bumpTodo todoList index = let todo = todoList !! index
-                          in  todo : (delete todo todoList)
+                          in  todo : delete todo todoList
 
 -- HELPERS
 replaceAtN ::  [a] -> Int -> a -> [a]
